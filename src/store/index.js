@@ -8,20 +8,38 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     cars: [],
-    activeCar: {}
+    activeCar: {},
+
+    jobs: [],
+    activeJob: {}
   },
   mutations: {
     setCars(state, cars) {
       state.cars = cars
     },
+
+    setJobs(state, jobs) {
+      state.jobs = jobs
+    },
+
     addCar(state, car) {
       state.cars.push(car)
+    },
+
+    addJob(state, job) {
+      state.jobs.push(job)
     },
     setActiveCar(state, car) {
       state.activeCar = car
     },
+    setActiveJob(state, job) {
+      state.activeJob = job
+    },
     removeCar(state, id) {
       state.cars = state.cars.filter(c => c.id != id)
+    },
+    removeJob(state, id) {
+      state.jobs = state.jobs.filter(j => j.id != id)
     }
   },
   actions: {
@@ -32,8 +50,17 @@ export default new Vuex.Store({
       } catch (error) {
         console.error(error)
       }
-
     },
+
+    async getAllJobs({ commit }) {
+      try {
+        let res = await api.get('jobs')
+        commit("setJobs", res.data.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
     async getCarById({ commit }, id) {
       try {
         let res = await api.get('cars/' + id)
@@ -41,8 +68,17 @@ export default new Vuex.Store({
       } catch (error) {
         console.error(error)
       }
-
     },
+
+    async getJobById({ commit }, id) {
+      try {
+        let res = await api.get('jobs/'+ id)
+        commit("setActiveJob", res.data.data)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
     async createCar({ commit }, newCar) {
       try {
         let res = await api.post('cars', newCar)
@@ -53,8 +89,19 @@ export default new Vuex.Store({
       } catch (error) {
         console.error(error)
       }
-
     },
+
+    async createJob({ commit }, newJob){
+      try {
+        let res = await api.post('jobs', newJob)
+        commit("addJob", res.data.data)
+        commit("setActiveJob", res.data.data)
+        router.push({ name: "JobDetails", params: { id: res.data.data._id} })
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
     async bid({ commit }, bid) {
       try {
         let res = await api.put('cars/' + bid.id, bid)
@@ -71,6 +118,18 @@ export default new Vuex.Store({
         commit("setActiveCar", {})
         // NOTE this will change the active route
         router.push({ name: "Cars" })
+      } catch (error) {
+        console.error(error)
+      }
+    },
+
+    async deleteJob({ commit }, id) {
+      try {
+        await api.delete('jobs/' + id)
+        commit("removeJob", id)
+        commit("setActiveJob", {})
+        // NOTE this will change the active route
+        router.push({ name: "Jobs" })
       } catch (error) {
         console.error(error)
       }

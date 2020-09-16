@@ -4,55 +4,53 @@
       <div class="col" id="form">
         <form @submit.prevent="createJob" class="form-inline">
           <div class="form-group p-1">
-            <label class="mr-1" for="make">Make</label>
+            <label class="mr-1" for="jobTitle">Job Title</label>
             <input
-              v-model="newCar.make"
+              v-model="newJob.jobTitle"
               type="text"
-              name="make"
-              id="make"
+              name="jobTitle"
+              id="jobTitle"
               class="form-control"
-              placeholder="Make..."
+              placeholder="Job Title..."
             />
           </div>
           <div class="form-group p-1">
-            <label class="mr-1" for="model">Model</label>
+            <label class="mr-1" for="company">Company</label>
             <input
-              v-model="newCar.model"
+              v-model="newJob.company"
               type="text"
-              name="model"
-              id="model"
+              name="company"
+              id="company"
               class="form-control"
-              placeholder="Model..."
+              placeholder="company..."
             />
           </div>
           <div class="form-group p-1">
-            <label class="mr-1" for="year">Year</label>
+            <label class="mr-1" for="rate">Pay Rate</label>
             <input
-              v-model="newCar.year"
+              v-model="newJob.rate"
               type="number"
-              name="year"
-              id="year"
+              name="rate"
+              id="rate"
               class="form-control"
-              placeholder="Year..."
-              min="1900"
-              max="2021"
+              placeholder="Pay Rate..."
             />
           </div>
           <div class="form-group p-1">
-            <label class="mr-1" for="price">Price</label>
+            <label class="mr-1" for="hours">Hours</label>
             <input
-              v-model="newCar.price"
+              v-model="newJob.hours"
               type="number"
-              name="price"
-              id="price"
+              name="hours"
+              id="hours"
               class="form-control"
-              placeholder="Price..."
+              placeholder="Hours per week..."
             />
           </div>
           <div class="form-group p-1">
             <label class="mr-1" for="description">Description</label>
             <input
-              v-model="newCar.description"
+              v-model="newJob.description"
               type="text"
               name="description"
               id="description"
@@ -60,29 +58,45 @@
               placeholder="Description..."
             />
           </div>
-          <div class="form-group p-1">
-            <label class="mr-1" for="img">Image Url</label>
-            <input
-              v-model="newCar.imgUrl"
-              type="url"
-              name="img"
-              id="img"
-              class="form-control"
-              placeholder="Image Url..."
-            />
-          </div>
-          <button type="submit" class="btn btn-outline-success">Add Car</button>
+          <button type="submit" class="btn btn-outline-success">Add Job</button>
         </form>
       </div>
     </div>
     <div class="row" id="data">
-      <car v-for="car in cars" :key="car._id" :carData="car" />
+      <JobPost v-for="job in jobs" :key="job._id" :jobData="job" />
     </div>
+    </main>
 </template>
 
 <script>
+import JobPost from '../components/JobPost'
 export default {
+  name: "Jobs",
+  mounted() {
+    this.$store.dispatch('getAllJobs')
+  },
 
+  data() {
+    return {
+      newJob: {}
+    }
+  },
+
+  computed: {
+    jobs() {
+      return this.$store.state.jobs
+    }
+  },
+
+  methods: {
+    createJob() {
+      this.$store.dispatch('createJob', this.newJob)
+    }
+  },
+
+  components: {
+    JobPost
+  }
 }
 </script>
 

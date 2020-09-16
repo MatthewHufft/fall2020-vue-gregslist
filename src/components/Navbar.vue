@@ -11,6 +11,7 @@
       >
         <router-link :to="{ name: 'Cars' }" class="nav-link">Cars</router-link>
       </li>
+      
       <li class="nav-item" :class="{ active: $route.name == 'Jobs' }">
         <router-link :to="{ name: 'Jobs' }" class="nav-link">Jobs</router-link>
       </li>
